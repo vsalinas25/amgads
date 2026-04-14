@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AMG — Reporte Performance Meta Ads v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a1a;
+  --ink-light: #4a4a4a;
+  --ink-faint: #8a8a8a;
+  --paper: #fafaf8;
+  --paper-warm: #f2efe9;
+  --rule: #e0ddd7;
+  --accent: #b5460f;
+  --accent-light: #f5ede9;
+  --green: #1a6b3a;
+  --green-light: #e8f4ed;
+  --amber: #8a5e00;
+  --amber-light: #fdf3dc;
+  --red: #9b1c1c;
+  --red-light: #fde8e8;
+  --blue: #1a3a6b;
+  --blue-light: #e8edf8;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* ── COVER ── */
+.cover {
+  min-height: 100vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  padding: 56px 64px;
+  border-bottom: 2px solid var(--ink);
+}
+
+.cover-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 40px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.amg-logo {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.25em;
+  color: var(--ink-faint);
+  text-transform: uppercase;
+}
+
+.doc-meta {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-align: right;
+  line-height: 1.8;
+}
+
+.cover-body {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 64px 0;
+}
+
+.cover-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 28px;
+}
+
+.cover-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(52px, 6vw, 88px);
+  font-weight: 900;
+  line-height: 1.0;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 40px;
+}
+
+.cover-title span {
+  display: block;
+  color: var(--accent);
+}
+
+.cover-subtitle {
+  font-size: 15px;
+  color: var(--ink-light);
+  max-width: 520px;
+  line-height: 1.75;
+  border-left: 3px solid var(--rule);
+  padding-left: 20px;
+}
+
+.cover-footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  padding-top: 40px;
+  border-top: 1px solid var(--rule);
+}
+
+.cover-brands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.brand-pill {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 4px 12px;
+  border: 1px solid var(--rule);
+  border-radius: 2px;
+  color: var(--ink-light);
+}
+
+.cover-alert {
+  background: var(--red-light);
+  border-left: 3px solid var(--red);
+  padding: 16px 20px;
+  border-radius: 0 4px 4px 0;
+}
+
+.cover-alert-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--red);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.cover-alert p {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.6;
+}
+
+/* ── SECTIONS ── */
+.section {
+  padding: 72px 64px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.section-eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.section-eyebrow::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+  max-width: 80px;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 34px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-bottom: 36px;
+}
+
+/* ── SUMMARY KPI ROW ── */
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  border: 1px solid var(--rule);
+  margin-bottom: 48px;
+}
+
+.kpi-cell {
+  padding: 28px 24px;
+  border-right: 1px solid var(--rule);
+}
+.kpi-cell:last-child { border-right: none; }
+
+.kpi-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 12px;
+}
+
+.kpi-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.kpi-context {
+  font-size: 11px;
+  color: var(--ink-light);
+  line-height: 1.5;
+}
+
+.kv-red { color: var(--red); }
+.kv-green { color: var(--green); }
+.kv-amber { color: var(--amber); }
+.kv-ink { color: var(--ink); }
+
+.trend-down { color: var(--red); }
+.trend-up { color: var(--green); }
+.trend-flat { color: var(--amber); }
+
+/* ── NARRATIVE COLUMNS ── */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+
+.two-col p {
+  font-size: 13.5px;
+  color: var(--ink-light);
+  line-height: 1.85;
+}
+
+.two-col p strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── TREND CHART (CSS bar chart) ── */
+.trend-section {
+  margin-bottom: 48px;
+}
+
+.trend-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-light);
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.chart-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 100px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
+
+.bar-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+
+.bar {
+  width: 100%;
+  border-radius: 2px 2px 0 0;
+  transition: opacity 0.2s;
+}
+
+.bar-green { background: var(--green); opacity: 0.7; }
+.bar-amber { background: var(--amber); opacity: 0.7; }
+.bar-red { background: var(--red); opacity: 0.7; }
+
+.bar-months {
+  display: flex;
+  gap: 6px;
+}
+
+.bar-month-label {
+  flex: 1;
+  text-align: center;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 8px;
+  color: var(--ink-faint);
+  letter-spacing: 0;
+}
+
+/* ── BRAND SECTION ── */
+.brand-block {
+  border-bottom: 1px solid var(--rule);
+}
+
+.brand-banner {
+  padding: 48px 64px 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.brand-num {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.brand-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.verdict-badge {
+  padding: 8px 18px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.vb-red { background: var(--red-light); color: var(--red); }
+.vb-amber { background: var(--amber-light); color: var(--amber); }
+.vb-green { background: var(--green-light); color: var(--green); }
+.vb-blue { background: var(--blue-light); color: var(--blue); }
+
+.brand-body {
+  padding: 0 64px 56px;
+}
+
+.metrics-bar {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border: 1px solid var(--rule);
+  background: var(--rule);
+  gap: 1px;
+  margin-bottom: 40px;
+}
+
+.metric-cell {
+  background: var(--paper);
+  padding: 20px 18px;
+}
+
+.mc-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin-bottom: 8px;
+}
+
+.mc-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.mc-sub {
+  font-size: 10px;
+  color: var(--ink-faint);
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.mc-red { color: var(--red); }
+.mc-green { color: var(--green); }
+.mc-amber { color: var(--amber); }
+.mc-ink { color: var(--ink); }
+
+/* ── ANALYSIS TRIO ── */
+.analysis-trio {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 0;
+}
+
+.a-card {
+  padding: 24px;
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+}
+
+.a-card.a-works { border-top: 3px solid var(--green); background: var(--green-light); }
+.a-card.a-fails { border-top: 3px solid var(--red); background: var(--red-light); }
+.a-card.a-actions { border-top: 3px solid var(--accent); background: var(--accent-light); }
+
+.a-header {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ah-green { color: var(--green); }
+.ah-red { color: var(--red); }
+.ah-accent { color: var(--accent); }
+
+.a-icon {
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.ai-green { background: rgba(26,107,58,0.15); color: var(--green); }
+.ai-red { background: rgba(155,28,28,0.15); color: var(--red); }
+.ai-accent { background: rgba(181,70,15,0.15); color: var(--accent); }
+
+.a-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.a-list li {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.65;
+  padding-left: 12px;
+  position: relative;
+}
+
+.a-list li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--rule);
+  font-size: 10px;
+}
+
+.a-list li strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.action-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.action-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(181,70,15,0.25);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 22px;
+  text-align: center;
+}
+
+.action-text {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.65;
+}
+
+.action-text strong {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+/* ── COMPARISON TABLE ── */
+.comparison-wrap {
+  overflow-x: auto;
+  margin-top: 32px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12.5px;
+}
+
+thead tr {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+thead th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+tbody tr {
+  border-bottom: 1px solid var(--rule);
+}
+
+tbody tr:hover {
+  background: var(--paper-warm);
+}
+
+tbody td {
+  padding: 16px;
+  vertical-align: middle;
+  line-height: 1.5;
+}
+
+.brand-td {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.sp-red { background: var(--red-light); color: var(--red); }
+.sp-green { background: var(--green-light); color: var(--green); }
+.sp-amber { background: var(--amber-light); color: var(--amber); }
+.sp-gray { background: var(--paper-warm); color: var(--ink-faint); }
+
+.data-na {
+  color: var(--ink-faint);
+  font-style: italic;
+  font-size: 11px;
+}
+
+/* ── PRIORITIES ── */
+.priority-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-top: 32px;
+}
+
+.priority-card {
+  padding: 28px;
+  border: 1px solid var(--rule);
+  display: flex;
+  gap: 20px;
+  border-radius: 4px;
+}
+
+.p-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: var(--rule);
+  line-height: 1;
+  flex-shrink: 0;
+  width: 44px;
+}
+
+.p-content {}
+
+.p-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 20px;
+  margin-bottom: 10px;
+}
+
+.pt-red { background: var(--red-light); color: var(--red); }
+.pt-amber { background: var(--amber-light); color: var(--amber); }
+.pt-blue { background: var(--blue-light); color: var(--blue); }
+
+.p-content h3 {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  line-height: 1.25;
+}
+
+.p-content p {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.75;
+}
+
+.p-content p strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ── DISCLAIMER BOX ── */
+.disclaimer {
+  background: var(--paper-warm);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--amber);
+  padding: 20px 24px;
+  margin-bottom: 40px;
+  border-radius: 0 4px 4px 0;
+}
+
+.disclaimer-title {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--amber);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 8px;
+}
+
+.disclaimer p {
+  font-size: 12px;
+  color: var(--ink-light);
+  line-height: 1.7;
+}
+
+/* ── FOOTER ── */
+.report-footer {
+  padding: 40px 64px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 2px solid var(--ink);
+}
+
+.footer-brand {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--ink-faint);
+}
+
+.footer-note {
+  font-size: 11px;
+  color: var(--ink-faint);
+  text-align: right;
+}
+
+/* ── DATA WARNING ── */
+.data-warning {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  color: var(--amber);
+  font-weight: 600;
+}
+
+@media print {
+  .cover { min-height: auto; page-break-after: always; }
+  .brand-block { page-break-inside: avoid; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══ -->
+<section class="cover">
+  <div class="cover-header">
+    <span class="amg-logo">AMG · Multi-Brand Food Group</span>
+    <div class="doc-meta">
+      Reporte Ejecutivo Meta Ads<br>
+      Período: Mayo 2023 — Feb 2026<br>
+      Generado: Abril 2026
+    </div>
+  </div>
+
+  <div class="cover-body">
+    <div class="cover-eyebrow">Análisis de Performance Digital · 6 Marcas</div>
+    <h1 class="cover-title">
+      Estado del<br>portafolio<br><span>digital AMG</span>
+    </h1>
+    <p class="cover-subtitle">
+      Diagnóstico de eficiencia en Meta Ads y Google Ads por marca. Identifica qué está funcionando, qué está perdiendo dinero y qué hacer esta semana. Preparado para equipo directivo.
+    </p>
+  </div>
+
+  <div class="cover-footer">
+    <div>
+      <div style="font-size:11px;color:var(--ink-faint);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px;">Marcas analizadas</div>
+      <div class="cover-brands">
+        <span class="brand-pill">Chubbies</span>
+        <span class="brand-pill">Muy Gallito</span>
+        <span class="brand-pill">Brass Monkey</span>
+        <span class="brand-pill">Tiin Thai</span>
+        <span class="brand-pill">Fat Bastard</span>
+        <span class="brand-pill">Palermo</span>
+      </div>
+    </div>
+    <div class="cover-alert">
+      <div class="cover-alert-title">⚠ Hallazgo crítico</div>
+      <p>4 de 6 marcas no tienen tracking de conversiones activo. <strong>~$8,400/mes en inversión sin datos de ROI.</strong> Esto es la prioridad #1 antes de cualquier otra decisión de medios.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══ EXECUTIVE SUMMARY ══ -->
+<section class="section">
+  <div class="section-eyebrow">00 — Resumen Ejecutivo</div>
+
+  <div class="disclaimer">
+    <div class="disclaimer-title">Nota sobre los datos</div>
+    <p>Chubbies y Muy Gallito tienen tracking completo de conversiones — los análisis son confiables. Brass Monkey, Tiin Thai, Fat Bastard y Palermo <strong>no tienen ventas atribuidas en el sistema</strong> (ROA = 0 en el archivo). Los datos disponibles para estas marcas son solo inversión, seguidores y alcance. Todo análisis de ROI para esas 4 marcas es imposible con la información actual.</p>
+  </div>
+
+  <div class="kpi-row">
+    <div class="kpi-cell">
+      <div class="kpi-label">ROA Chubbies (Ene 25)</div>
+      <div class="kpi-value kv-amber">13.5×</div>
+      <div class="kpi-context">↓ desde ~25× en mayo 2024<br>Tendencia bajista sostenida</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">ROA Chubbies (Feb 26)</div>
+      <div class="kpi-value kv-red">9.2×</div>
+      <div class="kpi-context">Mínimo histórico registrado<br>Benchmark food delivery: 4–8×</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">CPA FB Chubbies (Feb 26)</div>
+      <div class="kpi-value kv-red">$53</div>
+      <div class="kpi-context">↑ desde $43 en 2025 Ene<br>CPA Google el mismo mes: $32</div>
+    </div>
+    <div class="kpi-cell">
+      <div class="kpi-label">Inversión total portafolio</div>
+      <div class="kpi-value kv-ink">~$61K</div>
+      <div class="kpi-context">Feb 2026 (todas las marcas)<br>Solo Chubbies con ROI medible</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <p>
+      <strong>El portafolio tiene un motor que funciona y cinco marcas que operan a ciegas.</strong> Chubbies concentra prácticamente toda la inversión con tracking real ($47.8K de los ~$61K totales) y es la única marca donde se puede evaluar el ROI con certeza. Su diagnóstico es claro: el ROA cayó de ~25× a 9.2× en 18 meses, el CPA de Facebook subió de $43 a $53 y las órdenes bajaron de ~1,840 a 1,239 mensuales — con inversión básicamente igual. <strong>El dinero se gasta; los resultados bajaron.</strong>
+    </p>
+    <p>
+      <strong>Muy Gallito es la alerta más seria del portafolio.</strong> Con un ROAS de 1–3× y un ticket promedio de ~$300, el margen de adquisición es inviable. En los peores meses (Oct–Dic 2024) el ROAS cayó por debajo de 1× — es decir, se perdía dinero en cada pedido generado por ads. Las otras 4 marcas (Brass Monkey, Tiin Thai, Fat Bastard, Palermo) invierten un total de ~$9.4K/mes sin ningún sistema de atribución funcionando, lo que hace imposible cualquier evaluación de su desempeño real.
+    </p>
+  </div>
+
+  <!-- ROA TREND BAR CHART (Chubbies, últimos 14 meses) -->
+  <div class="trend-section">
+    <div class="trend-label">Chubbies — Tendencia de ROA (Ene 2025 → Feb 2026)</div>
+    <div class="chart-wrap">
+      <!-- ROA values scaled to 100px max. Max = 17.3 -->
+      <!-- Ene25=17.3 Feb=15.4 Mar=20.3 Abr=18.6 May=18.5 Jun=15.0 Jul=12.9 Ago=12.4 Sep=13.7 Oct=12.8 Nov=12.0 Dic=12.3 Ene26=13.5 Feb26=9.2 -->
+      <div class="bar-col"><div class="bar bar-amber" style="height:84%"></div></div>
+      <div class="bar-col"><div class="bar bar-amber" style="height:75%"></div></div>
+      <div class="bar-col"><div class="bar bar-green" style="height:99%"></div></div>
+      <div class="bar-col"><div class="bar bar-amber" style="height:91%"></div></div>
+      <div class="bar-col"><div class="bar bar-amber" style="height:90%"></div></div>
+      <div class="bar-col"><div class="bar bar-amber" style="height:73%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:63%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:60%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:67%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:62%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:58%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:60%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:66%"></div></div>
+      <div class="bar-col"><div class="bar bar-red" style="height:45%"></div></div>
+    </div>
+    <div class="bar-months">
+      <div class="bar-month-label">E25</div>
+      <div class="bar-month-label">F</div>
+      <div class="bar-month-label">M</div>
+      <div class="bar-month-label">A</div>
+      <div class="bar-month-label">My</div>
+      <div class="bar-month-label">J</div>
+      <div class="bar-month-label">Jl</div>
+      <div class="bar-month-label">Ag</div>
+      <div class="bar-month-label">S</div>
+      <div class="bar-month-label">O</div>
+      <div class="bar-month-label">N</div>
+      <div class="bar-month-label">D</div>
+      <div class="bar-month-label">E26</div>
+      <div class="bar-month-label">F26</div>
+    </div>
+    <p style="font-size:11px;color:var(--ink-faint);margin-top:8px;">Verde = ROA ≥18× / Ámbar = 13–18× / Rojo = &lt;13×. Valores reales: 17.3→15.4→20.3→18.6→18.5→15.0→12.9→12.4→13.7→12.8→12.0→12.3→13.5→9.2</p>
+  </div>
+</section>
+
+<!-- ══ CHUBBIES ══ -->
+<div class="brand-block">
+  <div class="brand-banner">
+    <div>
+      <div class="brand-num">01 / 06 — Tracking: Completo</div>
+      <div class="brand-title">Chubbies</div>
+    </div>
+    <span class="verdict-badge vb-amber">Motor del negocio — ROA en caída</span>
+  </div>
+  <div class="brand-body">
+
+    <div class="metrics-bar">
+      <div class="metric-cell">
+        <div class="mc-label">Inversión Feb 26</div>
+        <div class="mc-value mc-ink">$47,775</div>
+        <div class="mc-sub">FB: $19,708 · Google: $28,067</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">ROA Total Feb 26</div>
+        <div class="mc-value mc-red">9.2×</div>
+        <div class="mc-sub">Mínimo histórico registrado</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">CPA Facebook</div>
+        <div class="mc-value mc-red">$53</div>
+        <div class="mc-sub">vs. $32 CPA Google (Feb 26)</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">ROA Google Feb 26</div>
+        <div class="mc-value mc-amber">10.9×</div>
+        <div class="mc-sub">Rango 2025: 17–27× | Feb caída</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Órdenes Feb 26</div>
+        <div class="mc-value mc-red">1,239</div>
+        <div class="mc-sub">↓ de 1,840 pico (Ene 25)</div>
+      </div>
+    </div>
+
+    <div class="analysis-trio">
+      <div class="a-card a-works">
+        <div class="a-header ah-green"><span class="a-icon ai-green">✓</span>Qué está funcionando</div>
+        <ul class="a-list">
+          <li><strong>Google Ads supera a Facebook consistentemente.</strong> ROA Google promedia 19–27× durante 2025 (vs. 8–12× de Facebook). El CPA Google ($19–32) es casi la mitad del CPA Facebook ($43–65). El dinero rinde más en Google.</li>
+          <li><strong>Ticket promedio estable en ~$455.</strong> No hay erosión de precio. El producto sigue siendo deseado. El problema es de adquisición, no de producto.</li>
+          <li><strong>Estructura full-funnel activa.</strong> View Content → Tráfico → RMKT → Recompra. La arquitectura existe. Necesita optimización, no reconstrucción.</li>
+        </ul>
+      </div>
+
+      <div class="a-card a-fails">
+        <div class="a-header ah-red"><span class="a-icon ai-red">✗</span>Qué no está funcionando</div>
+        <ul class="a-list">
+          <li><strong>Facebook CPA se duplicó en 18 meses</strong> ($25 en 2023 → $53 en Feb 2026). Causa más probable: fatiga creativa + audiencias agotadas. La plataforma se encarece cuando los mismos creativos corren demasiado tiempo.</li>
+          <li><strong>Google también cayó en febrero.</strong> ROA Google fue 10.9× en Feb 26, el más bajo del período analizado (era 27×). Esto sugiere algo más allá de la fatiga: estacionalidad, o presupuesto mal distribuido entre campañas.</li>
+          <li><strong>Las órdenes cayeron 33%</strong> desde el pico (1,840 → 1,239) mientras la inversión se mantuvo. Se pagan más caros los mismos —o menos— clientes.</li>
+          <li><strong>~$10K/mes de diferencia en presupuesto</strong> se destina a Google cuando el ROA de Google es 2× el de Facebook. Existe margen para redistribuir.</li>
+        </ul>
+      </div>
+
+      <div class="a-card a-actions">
+        <div class="a-header ah-accent"><span class="a-icon ai-accent">→</span>Plan de acción</div>
+        <div class="action-row"><span class="action-num">1</span>
+          <div class="action-text"><strong>Auditar frecuencia de impresión en Facebook esta semana.</strong> Si supera 3.5×, pausar los conjuntos actuales y lanzar material nuevo. La fatiga creativa es la causa más probable del deterioro de CPA.</div>
+        </div>
+        <div class="action-row"><span class="action-num">2</span>
+          <div class="action-text"><strong>Reducir inversión en Facebook 20%, trasladarla a Google.</strong> Los datos lo justifican: CPA Google = $32 vs CPA Facebook = $53. Mover $4K/mes de FB a Google puede recuperar 150–200 órdenes mensuales.</div>
+        </div>
+        <div class="action-row"><span class="action-num">3</span>
+          <div class="action-text"><strong>Investigar la caída de Google en febrero.</strong> Fue atípica (10.9× vs 17–27× en meses anteriores). ¿Cambió algo en la campaña? ¿Subió la puja? ¿Hubo cambio en landing page?</div>
+        </div>
+        <div class="action-row"><span class="action-num">4</span>
+          <div class="action-text"><strong>Definir ROA mínimo de aceptabilidad: 15×.</strong> Toda campaña que esté por debajo por 3 semanas consecutivas se pausa automáticamente. Sin umbral definido, no hay criterio para actuar.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MUY GALLITO ══ -->
+<div class="brand-block">
+  <div class="brand-banner">
+    <div>
+      <div class="brand-num">02 / 06 — Tracking: Parcial (Facebook únicamente)</div>
+      <div class="brand-title">Muy Gallito</div>
+    </div>
+    <span class="verdict-badge vb-red">ROAS por debajo de 2× — Intervención urgente</span>
+  </div>
+  <div class="brand-body">
+
+    <div class="metrics-bar">
+      <div class="metric-cell">
+        <div class="mc-label">Inversión Feb 26</div>
+        <div class="mc-value mc-ink">$2,099</div>
+        <div class="mc-sub">Solo Facebook</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">ROAS Feb 26</div>
+        <div class="mc-value mc-amber">3.1×</div>
+        <div class="mc-sub">Mejor mes reciente — era 0.8× en Oct 24</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">CPA Feb 26</div>
+        <div class="mc-value mc-amber">$95</div>
+        <div class="mc-sub">Rango histórico: $91–$450</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Ticket Promedio</div>
+        <div class="mc-value mc-ink">$295</div>
+        <div class="mc-sub">Ene–Feb 26 (en caída)</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Órdenes Feb 26</div>
+        <div class="mc-value mc-ink">22</div>
+        <div class="mc-sub">Peak fue 120 (Feb 2024)</div>
+      </div>
+    </div>
+
+    <div style="background:var(--red-light);border-left:4px solid var(--red);padding:16px 20px;margin-bottom:24px;border-radius:0 4px 4px 0;">
+      <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:6px;">Contexto histórico crítico</div>
+      <p style="font-size:12px;color:var(--ink-light);line-height:1.7;">Entre <strong>octubre y diciembre 2024</strong>, el ROAS de Muy Gallito fue de 0.84×, 0.98× y 1.04× — literalmente por debajo de 1×. Eso significa que por cada peso invertido en ads, se generaba menos de un peso en ventas. Se perdía dinero activamente. Este patrón ya ocurrió. Aunque febrero 2026 muestra una leve mejora (3.1×), el historial exige cambios estructurales, no solo esperar.</p>
+    </div>
+
+    <div class="analysis-trio">
+      <div class="a-card a-works">
+        <div class="a-header ah-green"><span class="a-icon ai-green">✓</span>Señales positivas</div>
+        <ul class="a-list">
+          <li><strong>Inversión reducida a $2,099/mes.</strong> El daño está contenido. La decisión de bajar presupuesto fue correcta.</li>
+          <li><strong>Febrero 26 muestra recuperación parcial.</strong> ROAS 3.1× y CPA $95 son los mejores números en 6 meses. Aún insuficiente, pero la dirección cambió.</li>
+          <li><strong>En su mejor momento (Feb 2024)</strong> el ROAS era 3.5× con 95 órdenes/mes y CPA de $125. El mercado existe.</li>
+        </ul>
+      </div>
+
+      <div class="a-card a-fails">
+        <div class="a-header ah-red"><span class="a-icon ai-red">✗</span>Qué no está funcionando</div>
+        <ul class="a-list">
+          <li><strong>Con ticket de $295 y CPA de $95,</strong> el costo de adquisición ya consume el 32% del valor del pedido — antes de contar food cost, operación y delivery. El modelo no tiene margen.</li>
+          <li><strong>El ROAS promedio de los últimos 12 meses fue ~1.7×.</strong> Para una marca de food delivery con costos operativos reales, este número no justifica la inversión en paid media.</li>
+          <li><strong>Sin Google Ads.</strong> 100% dependencia de Facebook que, como vemos en Chubbies, es el canal más caro por conversión en el portafolio.</li>
+          <li><strong>Sin estructura TOFU/BOFU visible.</strong> Parece que solo hay campañas de conversión directa sin funnel de calentamiento ni recompra.</li>
+        </ul>
+      </div>
+
+      <div class="a-card a-actions">
+        <div class="a-header ah-accent"><span class="a-icon ai-accent">→</span>Plan de acción</div>
+        <div class="action-row"><span class="action-num">1</span>
+          <div class="action-text"><strong>Tomar decisión esta semana: restructurar o pausar.</strong> El historial de ROAS &lt;1× en tres meses consecutivos no puede repetirse. Se necesita definir un umbral de pausa: si el ROAS no alcanza 4× en 30 días, la campaña se pausa.</div>
+        </div>
+        <div class="action-row"><span class="action-num">2</span>
+          <div class="action-text"><strong>Si se continúa: segmentar por radio de entrega exacto.</strong> La causa más frecuente de CPA alto en delivery es llegar a personas que no pueden ordenar. Restricción geográfica dura al área servida.</div>
+        </div>
+        <div class="action-row"><span class="action-num">3</span>
+          <div class="action-text"><strong>Activar campaña de recompra sobre base existente.</strong> Los 120 clientes del período pico son un activo. Una campaña de Custom Audience sobre esa base tendrá un CPA 3–5× menor que la prospección nueva.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BRASS MONKEY, TIIN THAI, FAT BASTARD, PALERMO — consolidated ══ -->
+<div class="brand-block">
+  <div class="brand-banner">
+    <div>
+      <div class="brand-num">03–06 — Tracking: AUSENTE en todas</div>
+      <div class="brand-title">Marcas en construcción</div>
+    </div>
+    <span class="verdict-badge vb-blue">Brass Monkey · Tiin Thai · Fat Bastard · Palermo</span>
+  </div>
+  <div class="brand-body">
+
+    <div class="disclaimer">
+      <div class="disclaimer-title">Por qué estas 4 marcas van juntas</div>
+      <p>El archivo contiene inversión, seguidores y alcance para estas marcas. Las columnas de Ventas, Órdenes y CPA existen en el Excel pero sus valores son 0 o errores de fórmula (#REF!). No es un problema de falta de datos — es que <strong>el sistema de atribución de conversiones no está conectado</strong>. Reportar análisis individuales con datos inexistentes sería inventar. Lo que sí se puede analizar son los datos de inversión y audiencia disponibles.</p>
+    </div>
+
+    <div class="metrics-bar" style="grid-template-columns:repeat(4,1fr)">
+      <div class="metric-cell">
+        <div class="mc-label">Brass Monkey (Jun 25–Feb 26)</div>
+        <div class="mc-value mc-ink">$1,397</div>
+        <div class="mc-sub">Feb 26 · Rango: $774–$5,081/mes<br>Solo alcance/seguidores activos</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Tiin Thai (Jun 25–Feb 26)</div>
+        <div class="mc-value mc-ink">$1,649</div>
+        <div class="mc-sub">Feb 26 · ~$3,000/mes promedio<br>Solo alcance/seguidores</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Fat Bastard (Ago 25–Feb 26)</div>
+        <div class="mc-value mc-ink">$3,358</div>
+        <div class="mc-sub">Feb 26 · ~$3,500/mes estable<br>El más reciente y sin tracking</div>
+      </div>
+      <div class="metric-cell">
+        <div class="mc-label">Palermo (Sep 25–Feb 26)</div>
+        <div class="mc-value mc-ink">~$2,800</div>
+        <div class="mc-sub">Inversión seguidores: $1,398<br>Inversión alcance: $1,400<br>Costo/seguidor: $2.0</div>
+      </div>
+    </div>
+
+    <div class="analysis-trio">
+      <div class="a-card a-works">
+        <div class="a-header ah-green"><span class="a-icon ai-green">✓</span>Lo que se puede decir</div>
+        <ul class="a-list">
+          <li><strong>Los costos de audiencia son eficientes.</strong> Costo por seguidor: $1.7–$2.4 para BM/Tiin Thai/Fat Bastard/Palermo. CPM: $3–$9. Para marcas en etapa de awareness, las métricas de distribución son correctas.</li>
+          <li><strong>Las inversiones son controladas.</strong> Ninguna de las 4 marcas está sobre-invirtiendo en paid media sin modelo de negocio probado. El nivel de gasto es defensible para una etapa de construcción de marca.</li>
+          <li><strong>Palermo acumula alcance creciente.</strong> De 258K a 537K personas alcanzadas entre Oct–Ene. El contenido está llegando.</li>
+        </ul>
+      </div>
+
+      <div class="a-card a-fails">
+        <div class="a-header ah-red"><span class="a-icon ai-red">✗</span>El problema estructural</div>
+        <ul class="a-list">
+          <li><strong>$8,404/mes invertidos sin atribución.</strong> Brass Monkey ($1,397) + Tiin Thai ($1,649) + Fat Bastard ($3,358) + Palermo (~$2,000 seguidores+alcance) = dinero que no puede evaluarse.</li>
+          <li><strong>No es falta de conversiones — es falta de tracking.</strong> Si estas marcas tienen pedidos, no se están registrando. Si no tienen pedidos, tampoco se sabe. Es el mismo problema con dos diagnósticos opuestos posibles.</li>
+          <li><strong>Fat Bastard lleva 7 meses activo.</strong> No es una marca recién lanzada. A estas alturas debería existir un sistema de medición.</li>
+          <li><strong>Palermo tiene errores #REF! en las fórmulas de reporte.</strong> El archivo Excel está roto para esa marca específicamente.</li>
+        </ul>
+      </div>
+
+      <div class="a-card a-actions">
+        <div class="a-header ah-accent"><span class="a-icon ai-accent">→</span>Una sola prioridad — todas</div>
+        <div class="action-row"><span class="action-num">1</span>
+          <div class="action-text"><strong>Instalar/verificar pixel de conversión en las 4 marcas esta semana.</strong> Sin este paso, cualquier análisis de paid media es imposible. Es el prerrequisito de todo lo demás.</div>
+        </div>
+        <div class="action-row"><span class="action-num">2</span>
+          <div class="action-text"><strong>Definir el canal de venta de cada marca.</strong> ¿Tienen plataforma de delivery integrada? ¿Rappi, Uber Eats, web propia? El tracking solo funciona si hay una URL de confirmación de pedido para registrar el evento.</div>
+        </div>
+        <div class="action-row"><span class="action-num">3</span>
+          <div class="action-text"><strong>Corregir fórmulas #REF! en el reporte de Palermo.</strong> El equipo de operaciones/marketing debe revisar las celdas de Ventas y Órdenes de Palermo en el Excel. Con errores de fórmula no hay reporte posible.</div>
+        </div>
+        <div class="action-row"><span class="action-num">4</span>
+          <div class="action-text"><strong>Establecer deadline para definir KPIs.</strong> Propuesta: Fat Bastard (urgente, 7 meses activo) tiene 30 días para mostrar ROAS ≥4× o se pausa. Tiin Thai y BM, 45 días. Palermo, 60 días.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ COMPARISON TABLE ══ -->
+<section class="section">
+  <div class="section-eyebrow">07 — Resumen Comparativo</div>
+  <div class="section-title">Portafolio de marcas de un vistazo</div>
+
+  <div class="comparison-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Marca</th>
+          <th>Inv. Feb 26</th>
+          <th>ROAS/ROA</th>
+          <th>CPA</th>
+          <th>Ticket Prom.</th>
+          <th>Tracking</th>
+          <th>Meses activo</th>
+          <th>Diagnóstico</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="brand-td">Chubbies</span></td>
+          <td>$47,775</td>
+          <td><strong style="color:var(--amber)">9.2×</strong> ↓</td>
+          <td><strong style="color:var(--red)">$53 FB / $32 G</strong></td>
+          <td>$455</td>
+          <td><span class="status-pill sp-green">Completo</span></td>
+          <td>+36 meses</td>
+          <td>ROA en caída. Migrar presupuesto a Google. Rotar creativos.</td>
+        </tr>
+        <tr>
+          <td><span class="brand-td">Muy Gallito</span></td>
+          <td>$2,099</td>
+          <td><strong style="color:var(--amber)">3.1×</strong> (era 0.8×)</td>
+          <td><strong style="color:var(--red)">$95</strong></td>
+          <td>$295</td>
+          <td><span class="status-pill sp-amber">Parcial</span></td>
+          <td>+24 meses</td>
+          <td>ROAS insostenible históricamente. Decidir: restructurar o pausar.</td>
+        </tr>
+        <tr>
+          <td><span class="brand-td">Brass Monkey</span></td>
+          <td>$1,397</td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="status-pill sp-red">Ausente</span></td>
+          <td>9 meses</td>
+          <td>Instalar tracking. Lanzar campaña piloto de conversión ($1K).</td>
+        </tr>
+        <tr>
+          <td><span class="brand-td">Tiin Thai</span></td>
+          <td>$1,649</td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="status-pill sp-red">Ausente</span></td>
+          <td>9 meses</td>
+          <td>Mismo issue de tracking. CPM subiendo — renovar creativos.</td>
+        </tr>
+        <tr>
+          <td><span class="brand-td">Fat Bastard</span></td>
+          <td>$3,358</td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="status-pill sp-red">Ausente</span></td>
+          <td>7 meses</td>
+          <td>Mayor inversión sin tracking. Deadline: 30 días para demostrar ROI.</td>
+        </tr>
+        <tr>
+          <td><span class="brand-td">Palermo</span></td>
+          <td>~$2,800</td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="data-na">Sin datos</span></td>
+          <td><span class="status-pill sp-red">Ausente + #REF!</span></td>
+          <td>6 meses</td>
+          <td>Corregir reporte Excel + instalar tracking. Alcance creciente es buena señal.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ══ TOP PRIORITIES ══ -->
+<section class="section">
+  <div class="section-eyebrow">08 — Prioridades de acción</div>
+  <div class="section-title">Qué hacer esta semana y este mes</div>
+
+  <div class="priority-grid">
+    <div class="priority-card">
+      <div class="p-num">1</div>
+      <div class="p-content">
+        <span class="p-tag pt-red">Esta semana — Urgente</span>
+        <h3>Resolver tracking en 4 marcas</h3>
+        <p>Brass Monkey, Tiin Thai, Fat Bastard y Palermo invierten <strong>$8,404/mes sin ningún sistema de atribución.</strong> No se puede optimizar lo que no se mide. El pixel de conversión y la integración con la plataforma de delivery es el prerrequisito de todo lo demás. Un programador con acceso a las cuentas de Meta y al sistema de pedidos puede resolverlo en 1 día.</p>
+      </div>
+    </div>
+
+    <div class="priority-card">
+      <div class="p-num">2</div>
+      <div class="p-content">
+        <span class="p-tag pt-red">Esta semana — Urgente</span>
+        <h3>Decisión sobre Muy Gallito</h3>
+        <p>El historial muestra ROAS por debajo de 1× durante tres meses consecutivos (Oct–Dic 2024). Aunque febrero 2026 mejoró a 3.1×, la tendencia general es inviable. <strong>Tomar decisión esta semana:</strong> (a) restructurar completamente con segmentación geográfica y campaña de recompra, con meta de ROAS ≥4× en 30 días, o (b) pausar temporalmente hasta redefinir la estrategia.</p>
+      </div>
+    </div>
+
+    <div class="priority-card">
+      <div class="p-num">3</div>
+      <div class="p-content">
+        <span class="p-tag pt-amber">Próximas 2 semanas — Alta</span>
+        <h3>Auditar y rotar creativos de Chubbies</h3>
+        <p>El CPA de Facebook subió de $25 a $53 en 18 meses. La causa más probable es fatiga creativa — las mismas piezas corriendo demasiado tiempo. <strong>Revisar la frecuencia de impresión:</strong> si supera 3.5×, pausar y reemplazar inmediatamente. Paralelamente, reasignar ~$4K/mes de Facebook a Google (el canal con mejor ROA probado en el portafolio).</p>
+      </div>
+    </div>
+
+    <div class="priority-card">
+      <div class="p-num">4</div>
+      <div class="p-content">
+        <span class="p-tag pt-amber">Este mes — Alta</span>
+        <h3>Establecer protocolo de lanzamiento de marca</h3>
+        <p>El patrón se repite: 4 marcas activas sin tracking. Esto no debería poder ocurrir. Crear un checklist obligatorio antes de activar paid media en cualquier marca nueva: <strong>(1)</strong> pixel instalado y verificado, <strong>(2)</strong> plataforma de venta integrada con URL de confirmación, <strong>(3)</strong> CPA objetivo definido, <strong>(4)</strong> presupuesto separado awareness vs. conversión, <strong>(5)</strong> KPI de corte (si ROAS &lt; umbral en X semanas, se pausa).</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<div class="report-footer">
+  <span class="footer-brand">AMG · Reporte Performance Meta Ads · Abril 2026</span>
+  <div class="footer-note">
+    Datos: General Mensual, Mensual x Marca, Balances · Archivo: AMG_Performance_.xlsx<br>
+    Análisis sobre datos reales del período May 2023–Feb 2026. Cifras en MXN.
+  </div>
+</div>
+
+</body>
+</html>
